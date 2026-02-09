@@ -1,5 +1,5 @@
 {
-  "name": "@capgo/inappbrowser",
+  "name": "@calvingoh-hexa/capacitor-inappbrowser",
   "version": "6.9.36",
   "description": "Capacitor plugin in app browser",
   "main": "dist/plugin.cjs.js",
