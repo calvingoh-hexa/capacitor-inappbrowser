@@ -404,6 +404,8 @@ public class WebViewDialog extends Dialog {
   }
 
   public String getUrl() {
+    // To fix android crash issue
+    if (_webView == null) return null;
     return _webView.getUrl();
   }
 
@@ -718,7 +720,48 @@ public class WebViewDialog extends Dialog {
               // Do nothing
             }
           }
-          return false;
+          return handlePotentialUniversalLink(url, context);
+        }
+        // Handle potential universal link
+        private boolean handlePotentialUniversalLink(String url, Context context) {
+            Log.e("Universal", "Enter: " + url);
+            Uri uri = Uri.parse(url);
+
+            // Let WebView handle other URLs
+            if (!isKnownAppLinkDomain(uri.getHost())) {
+                return false;
+            }
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                try {
+                    context.startActivity(intent); // make sure "context" exists in this class
+                    return true;
+                } catch (ActivityNotFoundException e) {
+                    // No app can handle it, let WebView handle
+                    return false;
+                }
+            } catch (Exception e) {
+                Log.e("Universal", "Error with universal link: " + url, e);
+                return false;
+            }
+        }
+
+        private boolean isKnownAppLinkDomain(String host) {
+            if (host == null) return false;
+
+            String[] knownDomains = new String[] {
+                "tngdigital.com.my"
+                // Add other partner domains
+            };
+
+            for (String d : knownDomains) {
+                if (host.endsWith(d)) return true;
+            }
+            return false;
         }
 
         private String randomRequestId() {
