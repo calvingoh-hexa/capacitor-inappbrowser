@@ -11,7 +11,7 @@
     "android/build.gradle",
     "dist/",
     "ios/Plugin/",
-    "CapgoInappbrowser.podspec"
+    "CalvingohHexaCapacitorInappbrowser.podspec"
   ],
   "author": "Martin Donadieu",
   "license": "MIT",
